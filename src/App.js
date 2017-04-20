@@ -1,43 +1,30 @@
 import React, { Component } from 'react';
+import Player from './Player';
+import Game from './Game';
 
-class App extends Component {
-  state = { name: '', nameField: '' }
+class App extends React.Component {
+  state = { name: '', edit: true }
 
-  handleChange = (e) => {
-    this.setState({ nameField: e.target.value });
+  updatePlayer = (name) => {
+    this.setState({ name, edit: false })
   }
 
-  handleSubmit = (e) => {
-    e.preventDefault();
-    this.setState( (state) => { 
-      return { name: state.nameField, nameField: '' }
-    })
-  }
-
-  reset = () => {
-    this.setState({ name: '' });
+  editPlayer = () => {
+    this.setState({ edit: true });
   }
 
   render() {
-    let { name, nameField } = this.state
+    let { state: { name, edit }, updatePlayer } = this;
     return (
       <div>
-        { name ?
-          <div>
-            <h3>{`Player: ${name}`}</h3>
-            <button onClick={this.reset}>New Game</button>
-          </div>
+        { edit ?
+          <Player handleSubmit={updatePlayer} name={name} />
           :
-          <div>
-            <h1>Enter your name</h1>
-            <form onSubmit={this.handleSubmit}>
-              <input value={nameField} onChange={this.handleChange} />
-            </form>
-          </div>
+          <Game player={name} editPlayer={this.editPlayer} />
         }
       </div>
-    );
+    )
   }
 }
 
-export default App;
+export default App
