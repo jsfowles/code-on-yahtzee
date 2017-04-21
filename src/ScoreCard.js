@@ -64,7 +64,7 @@ class ScoreCard extends React.Component {
   checkEndGame = () => {
     let { scores } = this.state;
     if (!scores.filter( s => s.score === null).length)
-      this.props.endGame();
+      this.props.endGame(this.calculateTotal());
   }
 
   newGame = () => {

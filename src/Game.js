@@ -1,6 +1,7 @@
 import React from 'react';
 import Board from './Board';
 import ScoreCard from './ScoreCard';
+import { postScore } from './score';
 
 class Game extends React.Component {
   state = { roll: 0, die: [...new Array(5)], keep: [], endGame: false }
@@ -33,9 +34,9 @@ class Game extends React.Component {
     this.setState({ keep: updatedKeep })
   }
 
-  endGame = () => {
-    if (!this.state.endGame)
-      this.setState({ endGame: true });
+  endGame = (score) => {
+    if (!this.state.endGame) 
+      this.setState({ endGame: true }, postScore(score));
   }
 
   newGame = () => {
