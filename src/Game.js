@@ -2,52 +2,46 @@ import React from 'react';
 import { connect } from 'react-redux';
 import Board from './Board';
 import ScoreCard from './ScoreCard';
-import { postScore } from './score';
+import { postScore } from './actions/scores';
+import { resetRoll, newGame, rollDice, toggleKept } from './actions/mechanics';
 
 class Game extends React.Component {
-  state = { roll: 0, die: [...new Array(5)], keep: [], endGame: false }
+  state = { toggleEdit: false };
 
   resetRoll = () => {
-    this.setState({ roll: 0, die: [...new Array(5)], keep: [] });
+    this.props.dispatch(resetRoll());
   }
 
-  rollDie = () => {
-    let { keep } = this.state; 
-    let die = this.state.die.map( (el, i) => {
-      if (keep.includes(i))
-        return el
-      return Math.floor(Math.random() * 6) + 1
-    });
-    this.setState( (state) => {
-      return { die, roll: state.roll + 1 }
-    });
+  rollDice = () => {
+    let { currentGame: { dice, keep }, dispatch } = this.props;
+    dispatch(rollDice(dice, keep));
   }
 
   toggleKept = (i) => {
-    let { keep } = this.state;
-    let updatedKeep;
-
-    if (keep.includes(i))
-      updatedKeep = keep.filter( k => k !== i )
-    else
-      updatedKeep = [...keep, i]
-
-    this.setState({ keep: updatedKeep })
+    let { currentGame: { keep }, dispatch } = this.props;
+    dispatch(toggleKept(keep, i));
   }
 
-  endGame = (score) => {
-    if (!this.state.endGame) 
-      this.setState({ endGame: true }, postScore(score));
+  endGame = () => {
+    let { user, dispatch, currentGame: { completed } } = this.props;
+    if (!completed)
+      dispatch(postScore(this.props.user, this.calculateTotal()));
   }
 
   newGame = () => {
-    this.resetRoll();
-    this.setState({ endGame: false });
+    this.props.dispatch(newGame());
+  }
+
+  calculateTotal = () => {
+    return this.props.currentGame.scores.reduce( (total, entry) => {
+      let score = entry.score || 0;
+      return total + score;
+    }, 0);
   }
 
   render() {
-    let { user: { nickname }, toggleEdit } = this.props;
-    let { roll, die, keep, endGame } = this.state;
+    let { user: { nickname }, toggleEdit, currentGame: { roll, dice, keep, completed } } = this.props;
+
     return (
       <div>
         <div className="row">
@@ -60,26 +54,17 @@ class Game extends React.Component {
             </div>
           </div>
           <div style={styles.fullHeight} className="col s12 m8 green lighten-3">
-            { endGame ?
-              <h1 className="center">Game Over</h1> :
-              <Board 
-                roll={roll} 
-                die={die} 
-                keep={keep} 
-                rollDie={this.rollDie} 
-                toggleKept={this.toggleKept}
-              />
+            <h5 className='center'>Grand Total: {this.calculateTotal()}</h5>
+            { completed ?
+              <div className='center'>
+                <h1>Game Over</h1>
+                <button className='btn red' onClick={this.newGame}>New Game?</button>
+              </div> :
+              <Board />
             }
           </div>
           <div style={styles.fullHeight} className="col s12 m4 purple lighten-3">
-            <ScoreCard 
-              die={die} 
-              roll={roll} 
-              resetRoll={this.resetRoll} 
-              endGame={this.endGame} 
-              newGame={this.newGame} 
-              startNew={this.state.endGame} 
-            />
+            <ScoreCard endGame={this.endGame} />
           </div>
         </div>
       </div>
@@ -94,7 +79,10 @@ const styles = {
 }
 
 const mapStateToProps = (state) => {
-  return { user: state.user }
+  return { 
+    user: state.user, 
+    currentGame: state.currentGame,
+  }
 }
 
-export default connect(mapStateToProps)(Game)
+export default connect(mapStateToProps)(Game);

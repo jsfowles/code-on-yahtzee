@@ -13,14 +13,14 @@ const scores = [
   { section: 'lower', name: 'Chance', score: null, addAll: true }
 ];
 
-const currentGame = ( state = { scores, roll: 0, dice: [...new Array(5)], keep: [] }, action ) => {
+const currentGame = ( state = { scores, roll: 0, dice: [...new Array(5)], keep: [], completed: false }, action ) => {
   switch (action.type) {
     case 'RESET_ROLL':
       return {
         ...state,
         roll: 0,
         dice: [...new Array(5)],
-        keep: []
+        keep: [],
       }
     case 'ROLL_DICE':
       return {
@@ -40,12 +40,17 @@ const currentGame = ( state = { scores, roll: 0, dice: [...new Array(5)], keep: 
      }
     case 'NEW_GAME':
       return {
-        scores,
+        scores: scores.map( s => { return { ...s, score: null } } ),
         roll: 0,
         dice: [...new Array(5)],
-        keep: []
+        keep: [],
+        completed: false,
       }
-
+    case 'COMPLETE_GAME':
+      return {
+        ...state,
+        completed: true
+      }
     default:
       return state;
   }

@@ -5,6 +5,8 @@ import d3 from './images/d3.png';
 import d4 from './images/d4.png';
 import d5 from './images/d5.png';
 import d6 from './images/d6.png';
+import { toggleKept } from './actions/mechanics';
+import { connect } from 'react-redux';
 
 const images = { d1, d2, d3, d4, d5, d6 }
 
@@ -18,14 +20,17 @@ const styles = {
   }
 }
 
-const Dice = ({ value, index, kept, toggleKept }) => (
+const Dice = ({ dispatch, currentGame: { keep }, value, index }) => (
   <div className="col s12 m2">
     <img 
-      style={kept ? {...styles.dice, ...styles.kept} : styles.dice} 
+      style={keep.includes(index) ? {...styles.dice, ...styles.kept} : styles.dice} 
       src={images[`d${value}`]} 
-      onClick={() => toggleKept(index)}
+      onClick={() => dispatch(toggleKept(keep, index))}
     />
   </div>
 )
+const mapStateToProps = (state) => {
+  return { currentGame: state.currentGame }
+}
 
-export default Dice;
+export default connect(mapStateToProps)(Dice);

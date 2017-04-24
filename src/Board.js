@@ -1,9 +1,11 @@
 import React from 'react';
-import Dice from './Dice'
+import Dice from './Dice';
+import { resetRoll, newGame, rollDice } from './actions/mechanics';
+import { connect } from 'react-redux';
 
-const Board = ({ roll, die, keep, rollDie, toggleKept }) => {
-  let maxRoll = roll === 3
-  let disabled = maxRoll ? { disabled: true } : {}
+const Board = ({ dispatch, currentGame: { roll, dice, keep } }) => {
+  let maxRoll = roll === 3;
+  let disabled = maxRoll ? { disabled: true } : {};
 
   return (
     <div className="row">
@@ -12,7 +14,7 @@ const Board = ({ roll, die, keep, rollDie, toggleKept }) => {
         <button 
           className="btn"
           {...disabled} 
-          onClick={rollDie}
+          onClick={() => dispatch(rollDice(dice, keep))}
         >
           {maxRoll ? 'Score Rolls' : 'Roll'}
         </button>
@@ -21,14 +23,13 @@ const Board = ({ roll, die, keep, rollDie, toggleKept }) => {
         <br />
       </div>
       <div className="col offset-m1"></div>
-      { roll > 0 && 
-        die.map( (d, i) => {
-          let kept = keep.includes(i)
-          return <Dice key={i} index={i} kept={kept} toggleKept={toggleKept} value={d} />
-        })
-      }
+      { roll > 0 && dice.map( (d, i) => { return <Dice key={i} index={i} value={d} /> }) }
     </div>
   )
 }
 
-export default Board;
+const mapStateToProps = (state) => {
+  return { currentGame: state.currentGame }
+}
+
+export default connect(mapStateToProps)(Board);

@@ -6,6 +6,10 @@ export const newGame = () => {
   return { type: 'NEW_GAME' }
 }
 
+export const updateScores = (scores) => {
+  return { type: 'UPDATE_SCORES', scores }
+}
+
 export const rollDice = (currentDice, keep) => {
   return (dispatch) => {
     let dice = currentDice.map( (el, i) => {

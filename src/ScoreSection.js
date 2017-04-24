@@ -1,5 +1,6 @@
 import React from 'react';
 import ScoreRow from './ScoreRow';
+import { connect } from 'react-redux';
 
 const total = (score, label) => (
   <li 
@@ -31,12 +32,12 @@ const generateTotals = (scores, label) => {
   return sectionScores;
 }
 
-const ScoreSection = ({ scores, label, updateScore, canScore }) => (
+const ScoreSection = ({ label, currentGame: { scores } }) => (
   <div>
     <h5>{label} Section</h5>
     <ul className="collection">
-      { scores.map( (score, i) => {
-          return (<ScoreRow key={i} {...score} updateScore={updateScore} canScore={canScore} />)
+      { scores.filter( s => s.section === label.toLowerCase() ).map( (score, i) => {
+          return (<ScoreRow key={i} {...score} />)
         })
       }
       { generateTotals(scores, label) }
@@ -44,4 +45,8 @@ const ScoreSection = ({ scores, label, updateScore, canScore }) => (
   </div>
 )
 
-export default ScoreSection;
+const mapStateToProps = (state) => {
+  return { currentGame: state.currentGame }
+}
+
+export default connect(mapStateToProps)(ScoreSection);

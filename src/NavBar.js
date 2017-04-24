@@ -1,21 +1,26 @@
 import React from 'react';
-import { NavLink, withRouter } from 'react-router-dom';
+import { NavLink, withRouter, Link } from 'react-router-dom';
 import { logout } from './actions/auth';
 import { connect } from 'react-redux';
 
 const authLinks = (history, user, dispatch) => {
   if (Object.keys(user).length) {
     return (
-      <li>
-        <a 
-          onClick={ () => {
-            dispatch(logout(user))
-            history.push('/')
-          }}
-        >
-          Logout
-        </a>
-      </li>
+      [
+        <li key='scores-link'>
+          <NavLink exact activeStyle={styles.active} to='/scores'>Scores</NavLink>
+        </li>,
+        <li key='logout-link'>
+          <a 
+            onClick={ () => {
+              dispatch(logout(user))
+              history.push('/')
+            }}
+          >
+            Logout
+          </a>
+        </li>,
+      ]
     )
   }
 }
@@ -25,12 +30,12 @@ const NavBar = ({ history, user, dispatch }) => {
     { name: 'Home', url: '/' },
     { name: 'About', url: '/about' },
     { name: 'Rules', url: '/rules' },
-    { name: 'Scores', url: '/scores' }
   ]
 
   return (
     <nav>
       <div className="nav-wrapper">
+        <Link to='/'>Code On: Yahtzee</Link>
         <ul className="right">
           { links.map( (link, i) => {
               return (
@@ -45,7 +50,6 @@ const NavBar = ({ history, user, dispatch }) => {
       </div>
     </nav>
   )
-
 }
 
 const styles = {

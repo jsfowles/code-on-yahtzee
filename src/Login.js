@@ -10,7 +10,7 @@ class Login extends React.Component {
     e.preventDefault();
     let { email, password } = this.state
     let { dispatch, history } = this.props;
-    dispatch(auth({ email, password }, '/auth/sign_in', history));
+    dispatch(auth({ email, password }, 'auth/sign_in', history));
   }
 
   handleChange = (e) => {
