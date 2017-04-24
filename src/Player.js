@@ -1,6 +1,8 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { updateUser } from './actions/user';
 
-const Player = ({ name, handleSubmit }) => {
+const Player = ({ dispatch, user, toggleEdit }) => {
   let nameField;
 
   return (
@@ -8,16 +10,21 @@ const Player = ({ name, handleSubmit }) => {
       className="container"
       onSubmit={ e => {
         e.preventDefault()
-        handleSubmit(nameField.value)
+        dispatch(updateUser(nameField.value, user))
+        toggleEdit()
       }}
     >
       <label>Name: </label>
       <input 
         ref={ n => nameField = n } 
-        defaultValue={name}
+        defaultValue={user.nickname}
       />
     </form>
   )
 }
 
-export default Player
+const mapStateToProps = (state) => {
+  return { user: state.user }
+}
+
+export default connect(mapStateToProps)(Player)

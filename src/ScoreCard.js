@@ -25,7 +25,8 @@ class ScoreCard extends React.Component {
   }
 
   updateScore = (key) => {
-    this.props.resetRoll(); let { die } = this.props;
+    this.props.resetRoll(); 
+    let { die } = this.props;
     let { scores } = this.state;
     let entry = scores.find( d => d.name === key );
     if (entry.value) {

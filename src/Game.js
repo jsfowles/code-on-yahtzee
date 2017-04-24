@@ -1,4 +1,5 @@
 import React from 'react';
+import { connect } from 'react-redux';
 import Board from './Board';
 import ScoreCard from './ScoreCard';
 import { postScore } from './score';
@@ -45,17 +46,17 @@ class Game extends React.Component {
   }
 
   render() {
-    let { player, editPlayer } = this.props;
+    let { user: { nickname }, toggleEdit } = this.props;
     let { roll, die, keep, endGame } = this.state;
     return (
       <div>
         <div className="row">
           <div className="col s12">
             <div className="col s6">
-              <h4>Welcome {player}</h4>
+              <h4>Welcome {nickname}</h4>
             </div>
             <div className="col s6">
-              <button className="btn btn-flat right" onClick={editPlayer}>Edit Name</button>
+              <button className="btn btn-flat right" onClick={toggleEdit}>Edit Name</button>
             </div>
           </div>
           <div style={styles.fullHeight} className="col s12 m8 green lighten-3">
@@ -92,4 +93,8 @@ const styles = {
   }
 }
 
-export default Game
+const mapStateToProps = (state) => {
+  return { user: state.user }
+}
+
+export default connect(mapStateToProps)(Game)
