@@ -25,15 +25,15 @@ class ScoreCard extends React.Component {
   }
 
   updateScore = (key) => {
-    this.props.resetRoll(); let { die } = this.props;
+    this.props.resetRoll(); let { dice } = this.props;
     let { scores } = this.state;
     let entry = scores.find( d => d.name === key );
     if (entry.value) {
-      entry.score = singles(entry.value, die);
+      entry.score = singles(entry.value, dice);
     } else if (entry.addAll) {
-      entry.score = addAllDice(entry.name, die);
+      entry.score = addAllDice(entry.name, dice);
     } else {
-      entry.score = staticScore(entry.name, die);
+      entry.score = staticScore(entry.name, dice);
     }
 
     this.setState({ 

@@ -1,7 +1,7 @@
 import React from 'react';
 import Dice from './Dice'
 
-const Board = ({ roll, die, keep, rollDie, toggleKept }) => {
+const Board = ({ roll, dice, keep, rollDice, toggleKept }) => {
   let maxRoll = roll === 3
   let disabled = maxRoll ? { disabled: true } : {}
 
@@ -12,7 +12,7 @@ const Board = ({ roll, die, keep, rollDie, toggleKept }) => {
         <button 
           className="btn"
           {...disabled} 
-          onClick={rollDie}
+          onClick={rollDice}
         >
           {maxRoll ? 'Score Rolls' : 'Roll'}
         </button>
@@ -22,7 +22,7 @@ const Board = ({ roll, die, keep, rollDie, toggleKept }) => {
       </div>
       <div className="col offset-m1"></div>
       { roll > 0 && 
-        die.map( (d, i) => {
+        dice.map( (d, i) => {
           let kept = keep.includes(i)
           return <Dice key={i} index={i} kept={kept} toggleKept={toggleKept} value={d} />
         })

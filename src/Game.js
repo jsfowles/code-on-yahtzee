@@ -3,21 +3,21 @@ import Board from './Board';
 import ScoreCard from './ScoreCard';
 
 class Game extends React.Component {
-  state = { roll: 0, die: [...new Array(5)], keep: [], endGame: false }
+  state = { roll: 0, dice: [...new Array(5)], keep: [], endGame: false }
 
   resetRoll = () => {
-    this.setState({ roll: 0, die: [...new Array(5)], keep: [] });
+    this.setState({ roll: 0, dice: [...new Array(5)], keep: [] });
   }
 
-  rollDie = () => {
+  rollDice = () => {
     let { keep } = this.state; 
-    let die = this.state.die.map( (el, i) => {
+    let dice = this.state.dice.map( (el, i) => {
       if (keep.includes(i))
         return el
       return Math.floor(Math.random() * 6) + 1
     });
     this.setState( (state) => {
-      return { die, roll: state.roll + 1 }
+      return { dice, roll: state.roll + 1 }
     });
   }
 
@@ -45,7 +45,7 @@ class Game extends React.Component {
 
   render() {
     let { player, editPlayer } = this.props;
-    let { roll, die, keep, endGame } = this.state;
+    let { roll, dice, keep, endGame } = this.state;
     return (
       <div>
         <div className="row">
@@ -62,16 +62,16 @@ class Game extends React.Component {
               <h1 className="center">Game Over</h1> :
               <Board 
                 roll={roll} 
-                die={die} 
+                dice={dice} 
                 keep={keep} 
-                rollDie={this.rollDie} 
+                rollDice={this.rollDice} 
                 toggleKept={this.toggleKept}
               />
             }
           </div>
           <div style={styles.fullHeight} className="col s12 m4 purple lighten-3">
             <ScoreCard 
-              die={die} 
+              dice={dice} 
               roll={roll} 
               resetRoll={this.resetRoll} 
               endGame={this.endGame} 
