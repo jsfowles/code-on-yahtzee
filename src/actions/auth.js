@@ -32,8 +32,10 @@ export const auth = (user, endpoint, history) => {
       body: JSON.stringify({ ...user })
     }).then( res => res.json() )
       .then( user => { 
-        dispatch({ type: 'USER', user }) 
-        history.push('/')
+	if(!user.errors) {
+          dispatch({ type: 'USER', user }) 
+          history.push('/')
+	}
       })
   }
 }
