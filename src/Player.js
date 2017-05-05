@@ -1,14 +1,23 @@
 import React from 'react';
 
-const Player = ({ name, handleSubmit, handleChange }) => (
-  <form onSubmit={ handleSubmit }>
-    <label>Name: </label>
-    <input
-      onChange={ handleChange }
-      value={ name }
-      equired
-    />
-  </form>
-);
+const Player = ({ name, handleSubmit }) => {
+  let nameField;
 
-export default Player;
+  return (
+    <form 
+      className="container"
+      onSubmit={ e => {
+        e.preventDefault()
+        handleSubmit(nameField.value)
+      }}
+    >
+      <label>Name: </label>
+      <input 
+        ref={ n => nameField = n } 
+        defaultValue={name}
+      />
+    </form>
+  )
+}
+
+export default Player
