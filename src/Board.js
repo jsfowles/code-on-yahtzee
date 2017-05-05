@@ -1,7 +1,7 @@
 import React from 'react';
 import Dice from './Dice'
 
-const Board = ({ roll, dice, rollDice }) => {
+const Board = ({ roll, dice, rollDice, toggleKept, keep }) => {
   let maxRoll = roll === 3
   let disabled = maxRoll ? { disabled: true } : {}
 
@@ -18,7 +18,15 @@ const Board = ({ roll, dice, rollDice }) => {
       </div>
       { roll > 0 &&
         dice.map( (d, i) => {
-          return <Dice key={i} value={d} />
+          let kept = keep.includes(i)
+          return <Dice
+                  key={i}
+                  kept={kept}
+                  toggleKept={toggleKept}
+                  value={d}
+                  index={i}
+
+                />
         })
       }
     </div>

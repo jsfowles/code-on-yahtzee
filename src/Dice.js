@@ -8,14 +8,26 @@ import d6 from './images/d6.png';
 
 const images = { d1, d2, d3, d4, d5, d6 };
 
-const styles = {
-  dice: { width: '100%' },
-}
 
-const Dice = ({ value }) => (
+const Dice = ({ value, index, kept, toggleKept }) => (
   <div className='col s12 m2'>
-    <img style={styles.dice} src={images[`d${value}`]} />
+    <img
+    style={ kept ? {...styles.dice, ...styles.selected} : styles.dice }
+    src={ images[`d${value}`] }
+    onClick={ () => toggleKept(index) }
+  />
   </div>
 );
+
+const styles = {
+  dice: {
+    width: '100%' ,
+    cursor: 'pointer',
+  },
+
+  selected: {
+    borderBottom: 'solid 2px blue',
+  },
+}
 
 export default Dice;
