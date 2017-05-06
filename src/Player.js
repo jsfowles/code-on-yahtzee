@@ -4,16 +4,16 @@ const Player = ({ name, handleSubmit }) => {
   let nameField;
 
   return (
-    <form 
+    <form
       className="container"
       onSubmit={ e => {
         e.preventDefault()
         handleSubmit(nameField.value)
       }}
     >
-      <label>Name: </label>
-      <input 
-        ref={ n => nameField = n } 
+      <label>Username: </label>
+      <input
+        ref={ n => nameField = n }
         defaultValue={name}
       />
     </form>

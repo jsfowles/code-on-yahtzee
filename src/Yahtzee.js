@@ -1,12 +1,17 @@
 import React from 'react';
+import { authenticatedUser } from './auth';
+import { updateUser } from './user';
+
 import Player from './Player';
 import Game from './Game';
 
 class Yahtzee extends React.Component {
-  state = { name: '', edit: true }
+  state = { nickname: authenticatedUser().nickname, edit: false };
 
-  updatePlayer = (name) => {
-    this.setState({ name, edit: false })
+  updatePlayer = (nickname) => {
+    updateUser( nickname, () => {
+      this.setState({ nickname, edit: false });
+    });
   }
 
   editPlayer = () => {
@@ -14,13 +19,13 @@ class Yahtzee extends React.Component {
   }
 
   render() {
-    let { state: { name, edit }, updatePlayer, editPlayer } = this;
+    let { state: { nickname, edit }, updatePlayer, editPlayer } = this;
     return (
       <div>
         { edit ?
-          <Player handleSubmit={updatePlayer} name={name} />
+          <Player handleSubmit={updatePlayer} name={nickname} />
           :
-          <Game player={name} editPlayer={editPlayer} />
+          <Game player={nickname} editPlayer={editPlayer} />
         }
       </div>
     )

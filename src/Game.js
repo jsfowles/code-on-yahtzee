@@ -10,7 +10,7 @@ class Game extends React.Component {
   }
 
   rollDice = () => {
-    let { keep } = this.state; 
+    let { keep } = this.state;
     let dice = this.state.dice.map( (el, i) => {
       if (keep.includes(i))
         return el
@@ -54,29 +54,29 @@ class Game extends React.Component {
               <h4>Welcome {player}</h4>
             </div>
             <div className="col s6">
-              <button className="btn btn-flat right" onClick={editPlayer}>Edit Name</button>
+              <button className="btn btn-flat right" onClick={editPlayer}>Edit Username</button>
             </div>
           </div>
           <div style={styles.fullHeight} className="col s12 m8 green lighten-3">
             { endGame ?
               <h1 className="center">Game Over</h1> :
-              <Board 
-                roll={roll} 
-                dice={dice} 
-                keep={keep} 
-                rollDice={this.rollDice} 
+              <Board
+                roll={roll}
+                dice={dice}
+                keep={keep}
+                rollDice={this.rollDice}
                 toggleKept={this.toggleKept}
               />
             }
           </div>
           <div style={styles.fullHeight} className="col s12 m4 purple lighten-3">
-            <ScoreCard 
-              dice={dice} 
-              roll={roll} 
-              resetRoll={this.resetRoll} 
-              endGame={this.endGame} 
-              newGame={this.newGame} 
-              startNew={this.state.endGame} 
+            <ScoreCard
+              dice={dice}
+              roll={roll}
+              resetRoll={this.resetRoll}
+              endGame={this.endGame}
+              newGame={this.newGame}
+              startNew={this.state.endGame}
             />
           </div>
         </div>

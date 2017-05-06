@@ -1,12 +1,12 @@
 import React from 'react';
 import { NavLink, withRouter } from 'react-router-dom';
-import { fakeAuth, logout } from './auth';
+import { authenticatedUser, logout } from './auth';
 
 const authLinks = (history) => {
-  if (fakeAuth()) {
+  if (Object.keys(authenticatedUser()).length) {
     return (
       <li>
-        <a 
+        <a
           onClick={ () => {
             logout()
             history.push('/')
