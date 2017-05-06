@@ -1,84 +1,73 @@
 import React from 'react';
 import Board from './Board';
 import ScoreCard from './ScoreCard';
-import { postScore } from './score';
+import { postScore } from './actions/score';
+import { resetRoll, startNewGame, rollDice, toggleKept } from './actions/mechanics';
+import { connect } from 'react-redux';
 
 class Game extends React.Component {
-  state = { roll: 0, dice: [...new Array(5)], keep: [], endGame: false }
 
   resetRoll = () => {
-    this.setState({ roll: 0, dice: [...new Array(5)], keep: [] });
+    dispatch(resetRoll());
   }
 
   rollDice = () => {
-    let { keep } = this.state;
-    let dice = this.state.dice.map( (el, i) => {
-      if (keep.includes(i))
-        return el
-      return Math.floor(Math.random() * 6) + 1
-    });
-    this.setState( (state) => {
-      return { dice, roll: state.roll + 1 }
-    });
+    let { currentGame: { dice, keep }, dispatch } = this.props;
+    dispatch(rollDice(dice, keep));
   }
 
   toggleKept = (i) => {
-    let { keep } = this.state;
-    let updatedKeep;
-
-    if (keep.includes(i))
-      updatedKeep = keep.filter( k => k !== i )
-    else
-      updatedKeep = [...keep, i]
-
-    this.setState({ keep: updatedKeep })
+    let { currentGame: { keep }, dispatch } = this.props;
+    dispatch(toggleKept(keep, i));
   }
 
   endGame = (score) => {
-    if (!this.state.endGame)
-      this.setState({ endGame: true }, postScore(score));
+    let { user, dispatch, currentGame: { completed } } = this.props;
+    if (!completed)
+      dispatch(postScore(this.props.user, this.calculateTotal()));
   }
 
   newGame = () => {
-    this.resetRoll();
-    this.setState({ endGame: false });
+    this.props.dispatch(startNewGame());
+  }
+
+  calculateTotal = () => {
+    return this.props.currentGame.scores.reduce( (total, entry) => {
+      let score = entry.score || 0;
+      return total + score;
+    }, 0);
   }
 
   render() {
-    let { player, editPlayer } = this.props;
-    let { roll, dice, keep, endGame } = this.state;
+    let {
+      user: { nickname },
+      toggleEdit,
+      currentGame: { roll, dice, keep, completed }
+    } = this.props;
+
     return (
       <div>
         <div className="row">
           <div className="col s12">
             <div className="col s6">
-              <h4>Welcome {player}</h4>
+              <h4>Welcome {nickname}</h4>
             </div>
             <div className="col s6">
-              <button className="btn btn-flat right" onClick={editPlayer}>Edit Username</button>
+              <button className="btn btn-flat right" onClick={toggleEdit}>Edit Name</button>
             </div>
           </div>
           <div style={styles.fullHeight} className="col s12 m8 green lighten-3">
-            { endGame ?
-              <h1 className="center">Game Over</h1> :
-              <Board
-                roll={roll}
-                dice={dice}
-                keep={keep}
-                rollDice={this.rollDice}
-                toggleKept={this.toggleKept}
-              />
-            }
+            <h5 className='center'>Grand Total: {this.calculateTotal()}</h5>
+              { completed ?
+                <div className='center'>
+                  <h1>Game Over</h1>
+                  <button className='btn red' onClick={this.newGame}>New Game?</button>
+                </div> :
+                <Board />
+              }
           </div>
           <div style={styles.fullHeight} className="col s12 m4 purple lighten-3">
-            <ScoreCard
-              dice={dice}
-              roll={roll}
-              resetRoll={this.resetRoll}
-              endGame={this.endGame}
-              newGame={this.newGame}
-              startNew={this.state.endGame}
-            />
+            <ScoreCard endGame={this.endGame} />
           </div>
         </div>
       </div>
@@ -92,4 +81,11 @@ const styles = {
   }
 }
 
-export default Game
+const mapStateToProps = (state) => {
+  return {
+           user: state.user,
+           currentGame: state.currentGame,
+         }
+}
+
+export default connect(mapStateToProps)(Game);

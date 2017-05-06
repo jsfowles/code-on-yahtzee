@@ -1,15 +1,15 @@
 import React from 'react';
-import { Redirect, Link } from 'react-router-dom';
-import { auth, authenticatedUser } from './auth';
+import { Link } from 'react-router-dom';
+import { auth } from './actions/auth';
+import { connect } from 'react-redux';
 
 class Register extends React.Component {
   state = {
-    user: authenticatedUser(),
-    nickname: '',
-    email: '',
-    password: '',
-    passwordConfirmation: ''
-  }
+            nickname: '',
+            email: '',
+            password: '',
+            passwordConfirmation: ''
+          }
 
   handleChange = (e) => {
     let element = e.target;
@@ -20,11 +20,9 @@ class Register extends React.Component {
   register = (e) => {
     e.preventDefault();
     let { nickname, email, password, passwordConfirmation } = this.state
-    if (password === passwordConfirmation) {
-      auth({ nickname, email, password, passwordConfirmation }, '/auth', () => {
-        this.setState({ user: authenticatedUser() });
-      });
-    }
+    let { history, dispatch } = this.props;
+    if (password === passwordConfirmation)
+      dispatch(auth({ nickname, email, password, passwordConfirmation }, 'auth', history));
   }
 
   passwordsMatch = () => {
@@ -33,61 +31,48 @@ class Register extends React.Component {
   }
 
   render() {
-    let {
-      nickname,
-      email,
-      password,
-      passwordConfirmation,
-      user
-    } = this.state
-
+    let { nickname, email, password, passwordConfirmation } = this.state
     return (
       <div className="container">
         <h2 className="center">Create Account</h2>
         { this.passwordsMatch() ? null : <span className="red-text">Passwords do not match</span> }
-        { Object.keys(user).length ?
-            <Redirect to="/" />
-            :
-            <form onSubmit={this.register}>
-              <input
-                id="nickname"
-                autoFocus
-                required
-                placeholder="Nickname"
-                value={nickname}
-                onChange={this.handleChange}
-              />
-              <input
-                id="email"
-                required
-                placeholder="Email"
-                value={email}
-                onChange={this.handleChange}
-              />
-              <input
-                id="password"
-                required
-                type="password"
-                placeholder="Password"
-                value={password}
-                onChange={this.handleChange}
-              />              
-              <input
-                id="passwordConfirmation"
-                required
-                type="password"
-                placeholder="Confirm"
-                value={passwordConfirmation}
-                onChange={this.handleChange}
-              />
-
-              <button className="btn">Create</button>
-            </form>
-        }
+        <form onSubmit={this.register}>
+          <input
+            id="nickname"
+            autoFocus
+            required
+            placeholder="Nickname"
+            value={nickname}
+            onChange={this.handleChange}
+          />
+          <input
+            id="email"
+            required
+            placeholder="Email"
+            value={email}
+            onChange={this.handleChange}
+          />
+          <input
+            id="password"
+            required
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={this.handleChange}
+          />
+          <input
+            id="passwordConfirmation"
+            required type="password"
+            placeholder="Confirm"
+            value={passwordConfirmation}
+            onChange={this.handleChange}
+          />
+          <button className="btn">Create</button>
+        </form>
         <Link to='/login'>Sign In</Link>
       </div>
     )
   }
 }
 
-export default Register;
+export default connect()(Register);
