@@ -5,7 +5,7 @@ import { authHeaders } from './actions/auth';
 
 class Scores extends React.Component {
   state = { show: 'All', scores: [] }
-  
+
   componentDidMount() {
     let { user } = this.props;
     fetch(`${BASE_URL}/yahtzee_scores`, { headers: authHeaders(user) })
@@ -31,8 +31,8 @@ class Scores extends React.Component {
           {score}
           <div className="secondary-content">
             <span className="grey-text">{date}</span>
-            {' | ' }
-            {nickname}
+           {' | '}
+           {nickname}
           </div>
         </li>
       )
@@ -41,7 +41,7 @@ class Scores extends React.Component {
 
   render() {
     let { show } = this.state;
-    
+
     return (
       <div className="container">
         <h2 className="center">{show} Scores</h2>
@@ -49,7 +49,7 @@ class Scores extends React.Component {
           <button className="btn" onClick={this.toggleShow}>{ show === 'All' ? 'My Scores' : 'All Scores'}</button>
         </div>
         <ul className="collection">
-          { this.filteredScores() }
+         { this.filteredScores() }
         </ul>
       </div>
     )

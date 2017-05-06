@@ -3,7 +3,7 @@ import ScoreRow from './ScoreRow';
 import { connect } from 'react-redux';
 
 const total = (score, label) => (
-  <li 
+  <li
     key={label}
     className="collection-item"
   >
@@ -17,7 +17,7 @@ const total = (score, label) => (
 const generateTotals = (scores, label) => {
   const sectionScores = []
   const sectionTotal = scores.reduce( (total, entry) => {
-    let score = entry.score || 0 
+    let score = entry.score || 0
     return total + score
   }, 0)
 
@@ -32,18 +32,26 @@ const generateTotals = (scores, label) => {
   return sectionScores;
 }
 
-const ScoreSection = ({ label, currentGame: { scores } }) => (
-  <div>
-    <h5>{label} Section</h5>
-    <ul className="collection">
-      { scores.filter( s => s.section === label.toLowerCase() ).map( (score, i) => {
+const sectionTotals = (scores, label) => {
+  return scores.filter( s => s.section === label.toLowerCase() )
+}
+
+const ScoreSection = ({ label, currentGame: { scores } }) => {
+  let sectionScores = sectionTotals(scores, label);
+
+  return (
+    <div>
+      <h5>{label} Section</h5>
+      <ul className="collection">
+      { sectionScores.map( (score, i) => {
           return (<ScoreRow key={i} {...score} />)
         })
       }
-      { generateTotals(scores, label) }
+      { generateTotals(sectionScores, label) }
     </ul>
-  </div>
-)
+    </div>
+  )
+}
 
 const mapStateToProps = (state) => {
   return { currentGame: state.currentGame }
