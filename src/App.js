@@ -16,6 +16,7 @@ const App = () => (
     <NavBar />
     <Switch>
       <ProtectedRoute exact path="/" component={Yahtzee} />
+      <ProtectedRoute exact path="/scores" component={Scores} />
       <Route exact path="/login" component={Login} />
       <Route exact path="/register" component={Register} />
       <Route exact path="/about" component={About} />
