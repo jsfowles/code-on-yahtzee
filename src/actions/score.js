@@ -1,13 +1,15 @@
 import { authHeaders } from './auth';
-import { BASE_URL } from './url';
+import { BASE_URL } from '../utils/url';
 
 export const postScore = (score) => {
-  let value = score;
-  fetch(`${BASE_URL}/yahtzee_scores`, {
-    method: 'POST',
-    headers: authHeaders(),
-    body: JSON.stringify({ score: { value }})
-  })
+  return(dispatch) => {
+    let value = score;
+    fetch(`${BASE_URL}/yahtzee_scores`, {
+      method: 'POST',
+      headers: authHeaders(),
+      body: JSON.stringify({ score: { value }})
+    }).then ( dispatch({ type: 'COMPLETE_GAME'}))
+  }
 }
 
 export const highScores = (cb) => {
